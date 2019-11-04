@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1>Edit Product</h1>
+        <div class="row">
+            <div class="col">
+                {{ form(form,  {'attr': {'novalidate': 'novalidate'}}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
