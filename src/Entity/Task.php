@@ -29,7 +29,7 @@ class Task
     protected $task;
 
     /**
-     * @var string
+     * @var \DateTime
      *
      * @ORM\Column(type="datetime")
      *
@@ -37,6 +37,12 @@ class Task
      * @Assert\Type("\DateTime")
      */
     protected $dueDate;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tasks")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -53,7 +59,7 @@ class Task
         $this->task = $task;
     }
 
-    public function getDueDate(): ?string
+    public function getDueDate(): ?\DateTime
     {
         return $this->dueDate;
     }
@@ -61,5 +67,17 @@ class Task
     public function setDueDate(\DateTime $dueDate = null): void
     {
         $this->dueDate = $dueDate;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Form\Type\TaskType;
+use App\Security\Voter\TaskVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,6 +30,7 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // ... perform some action, such as saving the task to the database
             // for example, if Task is a Doctrine entity, save it!
+            $task->setUser($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($task);
             $entityManager->flush();
@@ -46,6 +48,8 @@ class TaskController extends AbstractController
      */
     public function edit(Task $task, Request $request)
     {
+        $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
+
         $form = $this->createForm(TaskType::class, $task, [
             'require_due_date' => true,
         ]);
@@ -60,6 +64,7 @@ class TaskController extends AbstractController
 
         return $this->render('task/edit.html.twig', [
             'form' => $form->createView(),
+            'taskUser' => $task->getUser()
         ]);
     }
 }
